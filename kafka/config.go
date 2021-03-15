@@ -1,4 +1,4 @@
-package store
+package kafka
 
 import (
 	"Qbus-manager/zookeeper"

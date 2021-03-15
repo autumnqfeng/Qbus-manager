@@ -1,6 +1,6 @@
 package topic
 
-type CreateTopic struct {
+type CreateTopicVo struct {
 	Cluster      string `json:"cluster"`
 	Topic        string `json:"topic"`
 	Partitions   int    `json:"partitions"`
@@ -9,9 +9,9 @@ type CreateTopic struct {
 	MaxMessage   int    `json:"max_message"`
 }
 
-type UpdateTopic struct {
-	Cluster      string `json:"cluster"`
-	Topic        string `json:"topic"`
-	Retention    int    `json:"retention"`
-	MaxMessage   int    `json:"max_message"`
+type UpdateTopicVo struct {
+	Cluster    string `json:"cluster"`
+	Topic      string `json:"topic"`
+	Retention  int    `json:"retention"`
+	MaxMessage int    `json:"max_message"`
 }

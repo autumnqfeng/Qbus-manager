@@ -2,8 +2,8 @@ package topic
 
 import (
 	"Qbus-manager/handler"
+	"Qbus-manager/kafka"
 	"Qbus-manager/pkg/errno"
-	"Qbus-manager/store"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -12,17 +12,19 @@ import (
 
 func Create(c *gin.Context) {
 	log.Info("Topic Create function called.")
-	var t CreateTopic
-	if err :=c.Bind(&t); err != nil {
+	var t CreateTopicVo
+	if err := c.Bind(&t); err != nil {
 		handler.SendResponse(c, errno.ErrBind, nil)
+		return
 	}
 
 	config := make(map[string]string)
 	config["retention.ms"] = strconv.Itoa(t.Retention)
 	config["max.message.bytes"] = strconv.Itoa(t.MaxMessage)
 
-	if err := store.CreateTopic(t.Topic, t.Partitions, t.Replications, config); err != nil {
+	if err := kafka.CreateTopic(t.Topic, t.Partitions, t.Replications, config); err != nil {
 		handler.SendResponse(c, errno.ErrCreateTopic, nil)
+		return
 	}
 	handler.SendResponse(c, errno.OK, nil)
 }
@@ -30,7 +32,5 @@ func Create(c *gin.Context) {
 func Delete(c *gin.Context) {
 	c.Param("clustername")
 	c.Param("topic")
-
-
 
 }

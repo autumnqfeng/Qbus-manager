@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	conn  *zk.Conn
+	conn                 *zk.Conn
 	PathDoesNotExistsErr = errors.New("zookeeper: Path does not exists")
 )
 
@@ -30,6 +30,11 @@ func Connect(urls []string) error {
 	return nil
 }
 
+func Exists(path string) bool {
+	exists, _, _ := conn.Exists(path)
+	return exists
+}
+
 func WatchChildren(path string) ([]string, *zk.Stat, <-chan zk.Event, error) {
 	return conn.ChildrenW(path)
 }
@@ -43,4 +48,25 @@ func get(path string, v interface{}) error {
 		return err
 	}
 	return json.Unmarshal(data, v)
+}
+
+func createPersistent(path string, data interface{}) error {
+	return create(path, data, 0)
+}
+
+func create(path string, data interface{}, flag int) error {
+	var (
+		bytes []byte
+		err   error
+	)
+	if str, ok := data.(string); ok {
+		bytes = []byte(str)
+	} else {
+		bytes, err = json.Marshal(data)
+	}
+	if err != nil {
+		return err
+	}
+	_, err = conn.Create(path, bytes, int32(flag), zk.WorldACL(zk.PermAll))
+	return err
 }

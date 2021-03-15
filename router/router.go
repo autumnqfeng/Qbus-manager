@@ -2,6 +2,7 @@ package router
 
 import (
 	"Qbus-manager/handler/check"
+	"Qbus-manager/handler/cluster"
 	"Qbus-manager/handler/topic"
 	"net/http"
 
@@ -12,7 +13,7 @@ import (
 )
 
 // Load loads the middleware's, routes, handlers.
-func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine{
+func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	// Middleware's
 	g.Use(gin.Recovery())
 	g.Use(middleware.NoCache)
@@ -27,18 +28,13 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine{
 	// pprof router
 	//pprof.Register(g)
 
-	//cluster := g.Group("/qbus/clusters")
+	clusterGroup := g.Group("/qbus/clusters")
+	{
+		clusterGroup.POST("addcluster", cluster.AddCluster)
+	}
+	//clusterGroupV1 := g.Group("/v1/qbus/clusters")
 	//{
-	//	//u.POST("", user.Create)
-	//	//u.DELETE("/:id", user.Delete)
-	//	//u.PUT("/:id", user.Update)
-	//	//u.GET("", user.List)
-	//	//u.GET("/:username", user.Get)
-	//	cluster.GET("")
-	//}
-	//clusterV1 := g.Group("/v1/qbus/clusters")
-	//{
-	//	clusterV1.GET("")
+	//	clusterGroupV1.GET("")
 	//}
 
 	topicGroup := g.Group("/qbus/topics")
@@ -48,7 +44,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine{
 	}
 
 	// The health check handlers
-	systemCheck:= g.Group("/check")
+	systemCheck := g.Group("/check")
 	{
 		systemCheck.GET("/health", check.HealthCheck)
 		systemCheck.GET("/disk", check.DiskCheck)
