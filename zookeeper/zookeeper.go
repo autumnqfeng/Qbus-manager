@@ -50,6 +50,19 @@ func get(path string, v interface{}) error {
 	return json.Unmarshal(data, v)
 }
 
+func set(path string, data interface{}) error {
+	_, stat, err := conn.Exists(path)
+	if err != nil {
+		return err
+	}
+	enc, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	_, err = conn.Set(path, enc, stat.Version)
+	return err
+}
+
 func createPersistent(path string, data interface{}) error {
 	return create(path, data, 0)
 }

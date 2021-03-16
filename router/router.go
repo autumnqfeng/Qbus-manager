@@ -30,7 +30,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 	clusterGroup := g.Group("/qbus/clusters")
 	{
-		clusterGroup.POST("addcluster", cluster.AddCluster)
+		clusterGroup.POST("/addcluster", cluster.AddCluster)
+		clusterGroup.GET("/deletecluster", cluster.DeleteCluster)
 	}
 	//clusterGroupV1 := g.Group("/v1/qbus/clusters")
 	//{

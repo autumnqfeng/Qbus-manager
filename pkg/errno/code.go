@@ -22,5 +22,8 @@ var (
 	ErrPasswordIncorrect = &Errno{Code: 20104, Message: "The password was incorrect."}
 
 	// cluster errors
-	ErrAddCluster = &Errno{Code: 20201, Message: "The cluster add failed."}
+	ErrAddCluster      = &Errno{Code: 20201, Message: "The cluster add failed."}
+	ErrClusterNotExist = &Errno{Code: 20202, Message: "non-existing cluster"}
+	ErrDisableCluster  = &Errno{Code: 20203, Message: "disable cluster error"}
+	ErrDeleteCluster   = &Errno{Code: 20204, Message: "delete cluster error"}
 )

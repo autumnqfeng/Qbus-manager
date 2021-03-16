@@ -4,6 +4,7 @@ import (
 	"Qbus-manager/handler"
 	"Qbus-manager/pkg/errno"
 	"Qbus-manager/zookeeper"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lexkong/log"
 )
@@ -17,6 +18,25 @@ func AddCluster(c *gin.Context) {
 	}
 
 	if err := zookeeper.AddCluster(acv.Name, acv.ZookeeperList); err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
+
+	handler.SendResponse(c, errno.OK, nil)
+}
+
+func DeleteCluster(c *gin.Context) {
+	clusterName := c.Query("clustername")
+	if clusterName == "" || len(clusterName) <= 0 {
+		handler.SendResponse(c, errors.New("param is empty"), nil)
+		return
+	}
+	if err := zookeeper.DisableCluster(clusterName); err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
+
+	if err := zookeeper.DeleteCluster(clusterName); err != nil {
 		handler.SendResponse(c, err, nil)
 		return
 	}
