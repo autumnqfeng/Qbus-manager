@@ -50,6 +50,23 @@ func get(path string, v interface{}) error {
 	return json.Unmarshal(data, v)
 }
 
+func all(path string, fn PermissionFunc) ([]string, error) {
+	rows := make([]string, 0)
+	if exists, _, _ := conn.Exists(path); !exists {
+		return rows, PathDoesNotExistsErr
+	}
+	children, _, err := conn.Children(path)
+	if err != nil {
+		return rows, err
+	}
+	for _, c := range children {
+		if fn(c) {
+			rows = append(rows, c)
+		}
+	}
+	return rows, nil
+}
+
 func set(path string, data interface{}) error {
 	_, stat, err := conn.Exists(path)
 	if err != nil {

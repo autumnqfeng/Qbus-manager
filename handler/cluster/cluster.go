@@ -43,3 +43,12 @@ func DeleteCluster(c *gin.Context) {
 
 	handler.SendResponse(c, errno.OK, nil)
 }
+
+func ListAllCluster(c *gin.Context) {
+	clusters, err := zookeeper.ListAllCluster()
+	if err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
+	handler.SendResponse(c, errno.OK, clusters)
+}

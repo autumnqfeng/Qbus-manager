@@ -9,6 +9,7 @@ import (
 const (
 	zkRoot               = "/kafka-manager"
 	configsZkPath        = "/configs"
+	baseClusterZkPath    = "/clusters"
 	deleteClustersZkPath = "/deleteClusters"
 )
 
@@ -66,4 +67,14 @@ func DeleteCluster(clusterName string) error {
 		return errno.ErrDeleteCluster
 	}
 	return nil
+}
+
+func ListAllCluster() (map[string][]string, error) {
+	clusters, err := all(zkRoot+baseClusterZkPath, func(string) bool { return true })
+	if err != nil {
+		return nil, err
+	}
+	result := make(map[string][]string)
+	result["list"] = clusters
+	return result, nil
 }
