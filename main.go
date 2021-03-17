@@ -29,7 +29,7 @@ func main() {
 		panic(err)
 	}
 
-	if err := zookeeper.Connect(config.ZookeeperURL); err != nil {
+	if err := zookeeper.Init(config.ZookeeperURL); err != nil {
 		log.Errorf(err, "zk_connect")
 		os.Exit(1)
 		return
@@ -42,5 +42,5 @@ func main() {
 	log.Info(http.ListenAndServe(config.DataYaml.Addr, g).Error())
 
 	<-signals
-	zookeeper.Stop()
+	zookeeper.StopAll()
 }

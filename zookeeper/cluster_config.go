@@ -6,16 +6,16 @@ import (
 	"strings"
 )
 
-type curatorConfig struct {
+type CuratorConfig struct {
 	ZkConnect       string `json:"zkConnect"`
 	ZkMaxRetry      int    `json:"zkMaxRetry"`
 	BaseSleepTimeMs int    `json:"baseSleepTimeMs"`
 	MaxSleepTimeMs  int    `json:"maxSleepTimeMs"`
 }
 
-type clusterConfig struct {
+type ClusterConfig struct {
 	ClusterName              string        `json:"name"`
-	CuratorConfig            curatorConfig `json:"curatorConfig"`
+	CuratorConfig            CuratorConfig `json:"CuratorConfig"`
 	Enabled                  bool          `json:"enabled"`
 	Version                  string        `json:"kafkaVersion"`
 	JmxEnabled               bool          `json:"jmxEnabled"`
@@ -30,7 +30,7 @@ type clusterConfig struct {
 	Tuning                   interface{}   `json:"tuning"`
 }
 
-func NewDefaultClusterConfig(clusterName string, zkHosts string) (*clusterConfig, error) {
+func NewDefaultClusterConfig(clusterName string, zkHosts string) (*ClusterConfig, error) {
 	if err := validateClusterName(clusterName); err != nil {
 		return nil, err
 	}
@@ -38,9 +38,9 @@ func NewDefaultClusterConfig(clusterName string, zkHosts string) (*clusterConfig
 		return nil, err
 	}
 
-	return &clusterConfig{
+	return &ClusterConfig{
 		ClusterName: clusterName,
-		CuratorConfig: curatorConfig{
+		CuratorConfig: CuratorConfig{
 			ZkConnect:       zkHosts,
 			ZkMaxRetry:      100,
 			BaseSleepTimeMs: 100,

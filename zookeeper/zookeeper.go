@@ -3,43 +3,28 @@ package zookeeper
 import (
 	"encoding/json"
 	"errors"
-	"time"
-
 	"github.com/samuel/go-zookeeper/zk"
 )
 
-var (
-	conn                 *zk.Conn
-	PathDoesNotExistsErr = errors.New("zookeeper: Path does not exists")
+const (
+	ZkRoot               = "/kafka-manager"
+	ConfigsZkPath        = "/configs"
+	BaseClusterZkPath    = "/clusters"
+	DeleteClustersZkPath = "/deleteClusters"
 )
 
-func Stop() {
-	if conn != nil {
-		conn.Close()
-	}
-}
+var PathDoesNotExistsErr = errors.New("zookeeper: Path does not exists")
 
-func Connect(urls []string) error {
-	var err error
-	Stop()
-	conn, _, err = zk.Connect(urls, 30*time.Second)
-	if err != nil {
-		return err
-	}
-	go watchBrokers()
-	return nil
-}
-
-func Exists(path string) bool {
+func Exists(conn *zk.Conn, path string) bool {
 	exists, _, _ := conn.Exists(path)
 	return exists
 }
 
-func WatchChildren(path string) ([]string, *zk.Stat, <-chan zk.Event, error) {
+func WatchChildren(conn *zk.Conn, path string) ([]string, *zk.Stat, <-chan zk.Event, error) {
 	return conn.ChildrenW(path)
 }
 
-func get(path string, v interface{}) error {
+func get(conn *zk.Conn, path string, v interface{}) error {
 	if exists, _, _ := conn.Exists(path); !exists {
 		return PathDoesNotExistsErr
 	}
@@ -50,7 +35,7 @@ func get(path string, v interface{}) error {
 	return json.Unmarshal(data, v)
 }
 
-func all(path string, fn PermissionFunc) ([]string, error) {
+func all(conn *zk.Conn, path string, fn PermissionFunc) ([]string, error) {
 	rows := make([]string, 0)
 	if exists, _, _ := conn.Exists(path); !exists {
 		return rows, PathDoesNotExistsErr
@@ -67,7 +52,7 @@ func all(path string, fn PermissionFunc) ([]string, error) {
 	return rows, nil
 }
 
-func set(path string, data interface{}) error {
+func set(conn *zk.Conn, path string, data interface{}) error {
 	_, stat, err := conn.Exists(path)
 	if err != nil {
 		return err
@@ -80,11 +65,11 @@ func set(path string, data interface{}) error {
 	return err
 }
 
-func createPersistent(path string, data interface{}) error {
-	return create(path, data, 0)
+func createPersistent(conn *zk.Conn, path string, data interface{}) error {
+	return create(conn, path, data, 0)
 }
 
-func create(path string, data interface{}, flag int) error {
+func create(conn *zk.Conn, path string, data interface{}, flag int) error {
 	var (
 		bytes []byte
 		err   error

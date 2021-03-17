@@ -7,6 +7,6 @@ import (
 )
 
 func adminClient() (*kafka.AdminClient, error) {
-	adminConfig := &kafka.ConfigMap{"bootstrap.servers": strings.Join(BrokerUrls.List(), ",")}
+	adminConfig := &kafka.ConfigMap{"bootstrap.servers": strings.Join(Brokers.KafkaUrlList(), ",")}
 	return kafka.NewAdminClient(adminConfig)
 }

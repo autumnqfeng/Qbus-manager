@@ -1,7 +1,10 @@
 package zookeeper
 
 import (
+	"Qbus-manager/pkg/errno"
 	"fmt"
+	"github.com/lexkong/log"
+	"github.com/samuel/go-zookeeper/zk"
 	"strconv"
 )
 
@@ -15,9 +18,9 @@ type B struct {
 	Id        int      `json:"id"`
 }
 
-func Broker(id int) (B, error) {
+func Broker(conn *zk.Conn, id int) (B, error) {
 	var b B
-	err := get(fmt.Sprintf("/brokers/ids/%d", id), &b)
+	err := get(conn, fmt.Sprintf("/brokers/ids/%d", id), &b)
 	b.Id = id
 	return b, err
 }
@@ -35,27 +38,36 @@ func WatchBrokers(ch chan []HostPort) {
 }
 
 func watchBrokers() {
-	data, _, events, _ := WatchChildren("/brokers/ids")
-	list := make([]HostPort, len(data))
-	for i, id := range data {
-		intId, err := strconv.Atoi(id)
-		if err != nil {
-			continue
-		}
-
-		broker, err := Broker(intId)
-		if err != nil {
-			continue
-		}
-		list[i] =HostPort{Id: intId, Host: broker.Host, Port: broker.Port}
+	conn, err := getDefaultConn()
+	if err != nil {
+		log.Errorf(errno.ErrGetConn, "err_code: `%v`, watch brokers `%v`", errno.ErrGetConn.Code, errno.ErrGetConn.Message)
+		return
 	}
+	data, _, events, _ := WatchChildren(conn, "/brokers/ids")
 
 	for _, ch := range brokersListeners {
-		ch <- list
+		ch <- DealBrokersChildren(conn, data)
 	}
 
 	_, ok := <-events
 	if ok {
 		watchBrokers()
 	}
+}
+
+func DealBrokersChildren(conn *zk.Conn, data []string) []HostPort {
+	hostPorts := make([]HostPort, len(data))
+	for i, id := range data {
+		intId, err := strconv.Atoi(id)
+		if err != nil {
+			continue
+		}
+
+		broker, err := Broker(conn, intId)
+		if err != nil {
+			continue
+		}
+		hostPorts[i] = HostPort{Id: intId, Host: broker.Host, Port: broker.Port}
+	}
+	return hostPorts
 }

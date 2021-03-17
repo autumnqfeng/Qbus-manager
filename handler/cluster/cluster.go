@@ -2,9 +2,9 @@ package cluster
 
 import (
 	"Qbus-manager/handler"
+	"Qbus-manager/kafka"
 	"Qbus-manager/pkg/errno"
 	"Qbus-manager/zookeeper"
-	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lexkong/log"
 )
@@ -28,7 +28,7 @@ func AddCluster(c *gin.Context) {
 func DeleteCluster(c *gin.Context) {
 	clusterName := c.Query("clustername")
 	if clusterName == "" || len(clusterName) <= 0 {
-		handler.SendResponse(c, errors.New("param is empty"), nil)
+		handler.SendResponse(c, errno.ErrValidation, nil)
 		return
 	}
 	if err := zookeeper.DisableCluster(clusterName); err != nil {
@@ -50,5 +50,36 @@ func ListAllCluster(c *gin.Context) {
 		handler.SendResponse(c, err, nil)
 		return
 	}
-	handler.SendResponse(c, errno.OK, clusters)
+	result := make(map[string][]string)
+	result["list"] = clusters
+	handler.SendResponse(c, errno.OK, result)
+}
+
+func GetClusterDetail(c *gin.Context) {
+	clusterName := c.Query("clustername")
+	if clusterName == "" || len(clusterName) <= 0 {
+		handler.SendResponse(c, errno.ErrValidation, nil)
+		return
+	}
+
+	cc, err := zookeeper.GetClusterConfig(clusterName)
+	if err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
+
+	brokers, err := kafka.GetBrokerListByCluster(cc)
+	if err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
+
+	// todo: topic
+
+	result := Detail{
+		ClusterName:   cc.ClusterName,
+		ZookeeperList: cc.CuratorConfig.ZkConnect,
+		BrokerList:    brokers,
+	}
+	handler.SendResponse(c, errno.OK, result)
 }
