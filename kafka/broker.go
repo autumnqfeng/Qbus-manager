@@ -53,13 +53,13 @@ func GetBrokerListByCluster(cc *zookeeper.ClusterConfig) ([]zookeeper.HostPort, 
 
 	conn, err := zookeeper.GetConn(clusterName)
 	if err != nil {
-		log.Errorf(errno.ErrClusterConnect, "err_code: `%v`, err_msg: `%v`", errno.ErrClusterConnect.Code, errno.ErrClusterConnect.Message)
+		log.Errorf(errno.ErrClusterConnect, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrClusterConnect.Code, errno.ErrClusterConnect.Message, clusterName)
 		return nil, errno.ErrClusterConnect
 	}
 
 	data, _, err := conn.Children("/brokers/ids")
 	if err != nil {
-		log.Errorf(errno.ErrGetBroker, "err_code: `%v`, err_msg: `%v`", errno.ErrGetBroker.Code, errno.ErrGetBroker.Message)
+		log.Errorf(errno.ErrGetBroker, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrGetBroker.Code, errno.ErrGetBroker.Message, clusterName)
 		return nil, errno.ErrGetBroker
 	}
 

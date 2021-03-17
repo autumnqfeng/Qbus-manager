@@ -74,12 +74,17 @@ func GetClusterDetail(c *gin.Context) {
 		return
 	}
 
-	// todo: topic
+	topics, err := kafka.GetTopicByCluster(cc)
+	if err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
 
 	result := Detail{
 		ClusterName:   cc.ClusterName,
 		ZookeeperList: cc.CuratorConfig.ZkConnect,
 		BrokerList:    brokers,
+		TopicList:     topics,
 	}
 	handler.SendResponse(c, errno.OK, result)
 }
