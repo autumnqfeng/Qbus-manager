@@ -1,7 +1,6 @@
 package kafka
 
 import (
-	"Qbus-manager/pkg/errno"
 	"Qbus-manager/zookeeper"
 	"fmt"
 	"github.com/lexkong/log"
@@ -46,22 +45,4 @@ func (b BrokersMap) KafkaUrl(k int) string {
 		return ""
 	}
 	return fmt.Sprintf("%s:%d", b[k].Host, b[k].Port)
-}
-
-func GetBrokerListByCluster(cc *zookeeper.ClusterConfig) ([]zookeeper.HostPort, error) {
-	clusterName := cc.ClusterName
-
-	conn, err := zookeeper.GetConn(clusterName)
-	if err != nil {
-		log.Errorf(errno.ErrClusterConnect, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrClusterConnect.Code, errno.ErrClusterConnect.Message, clusterName)
-		return nil, errno.ErrClusterConnect
-	}
-
-	data, _, err := conn.Children("/brokers/ids")
-	if err != nil {
-		log.Errorf(errno.ErrGetBroker, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrGetBroker.Code, errno.ErrGetBroker.Message, clusterName)
-		return nil, errno.ErrGetBroker
-	}
-
-	return zookeeper.DealBrokersChildren(conn, data), nil
 }

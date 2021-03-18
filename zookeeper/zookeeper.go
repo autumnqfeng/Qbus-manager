@@ -13,20 +13,25 @@ const (
 	DeleteClustersZkPath = "/deleteClusters"
 )
 
-var PathDoesNotExistsErr = errors.New("zookeeper: Path does not exists")
+var pathDoesNotExistsErr = errors.New("zookeeper: Path does not exists")
 
-func Exists(conn *zk.Conn, path string) bool {
+func exists(conn *zk.Conn, path string) bool {
 	exists, _, _ := conn.Exists(path)
 	return exists
 }
 
-func WatchChildren(conn *zk.Conn, path string) ([]string, *zk.Stat, <-chan zk.Event, error) {
+func watchChildren(conn *zk.Conn, path string) ([]string, *zk.Stat, <-chan zk.Event, error) {
 	return conn.ChildrenW(path)
 }
 
+func children(conn *zk.Conn, path string) ([]string, error) {
+	data, _, err := conn.Children(path)
+	return data, err
+}
+
 func get(conn *zk.Conn, path string, v interface{}) error {
-	if exists, _, _ := conn.Exists(path); !exists {
-		return PathDoesNotExistsErr
+	if exists := exists(conn, path); !exists {
+		return pathDoesNotExistsErr
 	}
 	data, _, err := conn.Get(path)
 	if err != nil {
@@ -38,7 +43,7 @@ func get(conn *zk.Conn, path string, v interface{}) error {
 func all(conn *zk.Conn, path string, fn PermissionFunc) ([]string, error) {
 	rows := make([]string, 0)
 	if exists, _, _ := conn.Exists(path); !exists {
-		return rows, PathDoesNotExistsErr
+		return rows, pathDoesNotExistsErr
 	}
 	children, _, err := conn.Children(path)
 	if err != nil {

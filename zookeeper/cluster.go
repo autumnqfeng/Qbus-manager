@@ -2,6 +2,7 @@ package zookeeper
 
 import (
 	"Qbus-manager/pkg/errno"
+	"fmt"
 	"github.com/lexkong/log"
 	"strings"
 	"sync"
@@ -19,7 +20,7 @@ func AddCluster(clusterName string, zkHosts string) error {
 		return err
 	}
 
-	conn, err := getDefaultConn()
+	conn, err := GetDefaultConn()
 	if err != nil {
 		log.Errorf(errno.ErrGetConn, "err_code: `%v`,err_msg `%v`, clusterName: `%v`, zkHosts: `%v`", errno.ErrGetConn.Code, errno.ErrGetConn.Message, clusterName, zkHosts)
 		return err
@@ -50,7 +51,7 @@ func DisableCluster(clusterName string) error {
 
 	cc.Enabled = false
 
-	conn, err := getDefaultConn()
+	conn, err := GetDefaultConn()
 	if err != nil {
 		log.Errorf(errno.ErrGetConn, "err_code: `%v`,err_msg `%v`, clusterName: `%v`", errno.ErrGetConn.Code, errno.ErrGetConn.Message, clusterName)
 		return err
@@ -72,7 +73,7 @@ func DeleteCluster(clusterName string) error {
 		return errno.ErrClusterNotExist
 	}
 
-	conn, err := getDefaultConn()
+	conn, err := GetDefaultConn()
 	if err != nil {
 		log.Errorf(errno.ErrGetConn, "err_code: `%v`,err_msg `%v`, clusterName: `%v`", errno.ErrGetConn.Code, errno.ErrGetConn.Message, clusterName)
 		return err
@@ -88,7 +89,7 @@ func DeleteCluster(clusterName string) error {
 }
 
 func ListAllCluster() ([]string, error) {
-	conn, err := getDefaultConn()
+	conn, err := GetDefaultConn()
 	if err != nil {
 		log.Errorf(errno.ErrGetConn, "err_code: `%v`,err_msg `%v`", errno.ErrGetConn.Code, errno.ErrGetConn.Message)
 		return nil, errno.ErrGetConn
@@ -102,14 +103,14 @@ func ListAllCluster() ([]string, error) {
 }
 
 func GetClusterConfig(clusterName string) (*ClusterConfig, error) {
-	conn, err := getDefaultConn()
+	conn, err := GetDefaultConn()
 	if err != nil {
 		log.Errorf(errno.ErrGetConn, "err_code: `%v`,err_msg `%v`, clusterName: `%v`", errno.ErrGetConn.Code, errno.ErrGetConn.Message, clusterName)
 		return nil, errno.ErrGetConn
 	}
 
 	path := ZkRoot + ConfigsZkPath + "/" + clusterName
-	if !Exists(conn, path) {
+	if !exists(conn, path) {
 		log.Errorf(errno.ErrNotFoundClusterConfig, "`%v`, cluster name :`%v`", errno.ErrNotFoundClusterConfig.Message, clusterName)
 		return nil, errno.ErrNotFoundClusterConfig
 	}
@@ -119,4 +120,50 @@ func GetClusterConfig(clusterName string) (*ClusterConfig, error) {
 		return nil, err
 	}
 	return &cc, nil
+}
+
+func GetAllHost(cc *ClusterConfig) ([]string, error) {
+	clusterName := cc.ClusterName
+
+	conn, err := GetConn(clusterName)
+	if err != nil {
+		log.Errorf(errno.ErrClusterConnect, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrClusterConnect.Code, errno.ErrClusterConnect.Message, clusterName)
+		return nil, errno.ErrClusterConnect
+	}
+
+	data, err := children(conn, "/qbus2/status")
+	if err != nil {
+		log.Errorf(errno.ErrGetBroker, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrGetBroker.Code, errno.ErrGetBroker.Message, clusterName)
+		return nil, errno.ErrGetBroker
+	}
+
+	return data, nil
+}
+
+func GetHostInfosByHosts(cc *ClusterConfig, hosts []string) ([]DiskInfo, error) {
+	clusterName := cc.ClusterName
+
+	conn, err := GetConn(clusterName)
+	if err != nil {
+		log.Errorf(errno.ErrClusterConnect, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrClusterConnect.Code, errno.ErrClusterConnect.Message, clusterName)
+		return nil, errno.ErrClusterConnect
+	}
+
+	diskInfos := make([]DiskInfo, 0)
+
+	for _, host := range hosts {
+		path := fmt.Sprintf("/qbus2/status/%v/disk", host)
+		if !exists(conn, path) {
+			continue
+		}
+
+		var disk int
+		if err := get(conn, path, &disk); err != nil {
+			log.Errorf(errno.ErrGetBroker, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrGetBroker.Code, errno.ErrGetBroker.Message, clusterName)
+			return nil, errno.ErrGetBroker
+		}
+		diskInfos = append(diskInfos, *NewDiskInfo(host, disk))
+	}
+
+	return diskInfos, nil
 }

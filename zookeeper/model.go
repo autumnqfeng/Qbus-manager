@@ -84,3 +84,12 @@ func validateZkHosts(zkHosts string) error {
 	}
 	return nil
 }
+
+type DiskInfo struct {
+	HostName     string `json:"hostname"`
+	DiskFreeSize int    `json:"diskfreesize"` // KB
+}
+
+func NewDiskInfo(hostName string, diskFreeSize int) *DiskInfo {
+	return &DiskInfo{HostName: hostName, DiskFreeSize: diskFreeSize}
+}

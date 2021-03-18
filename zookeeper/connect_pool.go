@@ -20,7 +20,7 @@ func Init(urls []string) error {
 	return err
 }
 
-func getDefaultConn() (*zk.Conn, error) {
+func GetDefaultConn() (*zk.Conn, error) {
 	return GetConn("default")
 }
 

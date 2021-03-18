@@ -2,7 +2,6 @@ package cluster
 
 import (
 	"Qbus-manager/handler"
-	"Qbus-manager/kafka"
 	"Qbus-manager/pkg/errno"
 	"Qbus-manager/zookeeper"
 	"github.com/gin-gonic/gin"
@@ -68,13 +67,13 @@ func GetClusterDetail(c *gin.Context) {
 		return
 	}
 
-	brokers, err := kafka.GetBrokerListByCluster(cc)
+	brokers, err := zookeeper.GetBrokerListByCluster(cc)
 	if err != nil {
 		handler.SendResponse(c, err, nil)
 		return
 	}
 
-	topics, err := kafka.GetTopicByCluster(cc)
+	topics, err := zookeeper.GetTopicByCluster(cc)
 	if err != nil {
 		handler.SendResponse(c, err, nil)
 		return
@@ -86,5 +85,33 @@ func GetClusterDetail(c *gin.Context) {
 		BrokerList:    brokers,
 		TopicList:     topics,
 	}
+	handler.SendResponse(c, errno.OK, result)
+}
+
+func GetClusterDiskInfo(c *gin.Context) {
+	clusterName := c.Query("clustername")
+	if clusterName == "" || len(clusterName) <= 0 {
+		handler.SendResponse(c, errno.ErrValidation, nil)
+		return
+	}
+
+	cc, err := zookeeper.GetClusterConfig(clusterName)
+	if err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
+
+	hosts, err := zookeeper.GetAllHost(cc)
+	if err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
+
+	result, err := zookeeper.GetHostInfosByHosts(cc, hosts)
+	if err != nil {
+		handler.SendResponse(c, err, nil)
+		return
+	}
+
 	handler.SendResponse(c, errno.OK, result)
 }

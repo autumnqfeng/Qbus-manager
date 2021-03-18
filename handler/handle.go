@@ -7,9 +7,9 @@ import (
 )
 
 type Response struct {
-	ErrCode    	string           `json:"errcode"`
-	ErrMsg 		string      	 `json:"errmsg"`
-	Result    	interface{}      `json:"result"`
+	ErrCode string      `json:"errcode"`
+	ErrMsg  string      `json:"errmsg"`
+	Result  interface{} `json:"result"`
 }
 
 type ResponseV1 struct {
@@ -18,7 +18,7 @@ type ResponseV1 struct {
 	Data    interface{} `json:"data"`
 }
 
-func SendResponse(c *gin.Context, err error, result interface{})  {
+func SendResponse(c *gin.Context, err error, result interface{}) {
 	code, message := errno.DecodeErr(err)
 
 	errCode := "Failed"
@@ -29,19 +29,19 @@ func SendResponse(c *gin.Context, err error, result interface{})  {
 
 	// always return http.StatusOK
 	c.JSON(http.StatusOK, Response{
-		ErrCode:    errCode,
-		ErrMsg: 	message,
-		Result:    	result,
+		ErrCode: errCode,
+		ErrMsg:  message,
+		Result:  result,
 	})
 }
 
-func SendResponseV1(c *gin.Context, err error, result interface{})  {
+func SendResponseV1(c *gin.Context, err error, result interface{}) {
 	code, message := errno.DecodeErr(err)
 
 	// always return http.StatusOK
 	c.JSON(http.StatusOK, ResponseV1{
-		Code:    	code,
-		Message: 	message,
-		Data:    	result,
+		Code:    code,
+		Message: message,
+		Data:    result,
 	})
 }

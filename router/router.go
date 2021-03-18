@@ -34,11 +34,8 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		clusterGroup.GET("/deletecluster", cluster.DeleteCluster)
 		clusterGroup.GET("/listall", cluster.ListAllCluster)
 		clusterGroup.GET("/getclusterdetail", cluster.GetClusterDetail)
+		clusterGroup.GET("/getclusterdiskinfo", cluster.GetClusterDiskInfo)
 	}
-	//clusterGroupV1 := g.Group("/v1/qbus/clusters")
-	//{
-	//	clusterGroupV1.GET("")
-	//}
 
 	topicGroup := g.Group("/qbus/topics")
 	{

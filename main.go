@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Qbus-manager/zookeeper"
 	"net/http"
 	"os"
 	"os/signal"
@@ -8,8 +9,6 @@ import (
 	"Qbus-manager/config"
 	"Qbus-manager/pkg/ping"
 	"Qbus-manager/pkg/version"
-	"Qbus-manager/zookeeper"
-
 	"github.com/lexkong/log"
 )
 
