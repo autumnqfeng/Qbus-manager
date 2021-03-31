@@ -2,10 +2,12 @@ package kafka
 
 import (
 	"fmt"
+	. "strconv"
+
+	"qbus-manager/pkg/zookeeper"
+
 	"github.com/lexkong/log"
 	"github.com/lexkong/log/lager"
-	"qbus-manager/zookeeper"
-	. "strconv"
 )
 
 func init() {

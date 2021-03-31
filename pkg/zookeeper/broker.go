@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-type B struct {
+type BrokerMsg struct {
 	Version   int      `json:"-"`
 	JmxPort   int      `json:"jmx_port"`
 	Timestamp string   `json:"timestamp"`
@@ -18,8 +18,8 @@ type B struct {
 	Id        int      `json:"id"`
 }
 
-func Broker(conn *zk.Conn, id int) (B, error) {
-	var b B
+func Broker(conn *zk.Conn, id int) (BrokerMsg, error) {
+	var b BrokerMsg
 	err := get(conn, fmt.Sprintf("/brokers/ids/%d", id), &b)
 	b.Id = id
 	return b, err

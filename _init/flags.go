@@ -1,8 +1,9 @@
-package config
+package _init
 
 import (
-	"github.com/spf13/pflag"
 	"strings"
+
+	"github.com/spf13/pflag"
 )
 
 var (

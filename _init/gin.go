@@ -1,4 +1,4 @@
-package config
+package _init
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,7 +6,7 @@ import (
 	"qbus-manager/router/middleware"
 )
 
-func initGin() *gin.Engine {
+func ginInit() *gin.Engine {
 
 	// Set gin mode.
 	gin.SetMode(DataYaml.RunMode)

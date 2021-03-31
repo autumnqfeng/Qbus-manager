@@ -1,4 +1,4 @@
-package config
+package _init
 
 import (
 	"strings"
@@ -30,26 +30,26 @@ func parseConfig() *Config {
 	return &cfg
 }
 
-func Init() (*gin.Engine, error) {
+func SystemInit() (*gin.Engine, error) {
 
-	// init ConfigData properties
-	if err := initConfig(); err != nil {
+	// _init ConfigData properties
+	if err := configInit(); err != nil {
 		return nil, err
 	}
 
-	// init log package
-	initLog()
+	// _init log package
+	logInit()
 	// monitor configuration file changes and hot load the program
 	watchConfig()
 
-	return initGin(), nil
+	return ginInit(), nil
 }
 
-func initConfig() error {
+func configInit() error {
 	if Cfg != "" {
 		viper.SetConfigFile(Cfg)
 	} else {
-		viper.AddConfigPath("conf")
+		viper.AddConfigPath("configs")
 		viper.SetConfigName("config")
 	}
 	viper.SetConfigType("yaml")

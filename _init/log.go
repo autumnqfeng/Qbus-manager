@@ -1,11 +1,11 @@
-package config
+package _init
 
 import (
 	"github.com/lexkong/log"
 	"github.com/spf13/viper"
 )
 
-func initLog() {
+func logInit() {
 	passLagerCfg := log.PassLagerCfg{
 		Writers:        viper.GetString("log.writers"),
 		LoggerLevel:    viper.GetString("log.logger_level"),

@@ -2,10 +2,12 @@ package zookeeper
 
 import (
 	"fmt"
-	"github.com/lexkong/log"
-	"qbus-manager/pkg/errno"
 	"strings"
 	"sync"
+
+	"qbus-manager/pkg/errno"
+
+	"github.com/lexkong/log"
 )
 
 var (

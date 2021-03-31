@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"qbus-manager/config"
 	"runtime"
+
+	"qbus-manager/_init"
 )
 
 // Info contains versioning information.
@@ -38,7 +39,7 @@ func getVersionInfo() *Info {
 
 // print version information
 func PrintVersion() bool {
-	if config.SysVersion {
+	if _init.SysVersion {
 		marshaled, err := json.MarshalIndent(getVersionInfo(), "", "  ")
 		if err != nil {
 			fmt.Printf("%v\n", err)

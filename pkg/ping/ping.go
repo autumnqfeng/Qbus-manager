@@ -2,10 +2,12 @@ package ping
 
 import (
 	"errors"
-	"github.com/lexkong/log"
 	"net/http"
-	"qbus-manager/config"
 	"time"
+
+	"qbus-manager/_init"
+
+	"github.com/lexkong/log"
 )
 
 // Ping the server to make sure the router is working.
@@ -18,9 +20,9 @@ func Start() {
 
 // pingServer pings the http server to make sure the router is working.
 func pingServer() error {
-	for i := 0; i < config.DataYaml.MaxPingCount; i++ {
+	for i := 0; i < _init.DataYaml.MaxPingCount; i++ {
 		// Ping the server by sending a GET request to `/health`.
-		resp, err := http.Get(config.DataYaml.Url + "/check/health")
+		resp, err := http.Get(_init.DataYaml.Url + "/check/health")
 		if err == nil && resp.StatusCode == 200 {
 			return nil
 		}

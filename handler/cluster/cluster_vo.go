@@ -1,6 +1,6 @@
 package cluster
 
-import "qbus-manager/zookeeper"
+import "qbus-manager/pkg/zookeeper"
 
 type AddClusterVo struct {
 	Name          string `json:"name"`

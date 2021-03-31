@@ -3,6 +3,7 @@ package zookeeper
 import (
 	"encoding/json"
 	"errors"
+
 	"github.com/samuel/go-zookeeper/zk"
 )
 

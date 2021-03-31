@@ -2,10 +2,12 @@ package zookeeper
 
 import (
 	"errors"
-	"github.com/samuel/go-zookeeper/zk"
-	"qbus-manager/pkg/errno"
 	"strings"
 	"time"
+
+	"qbus-manager/pkg/errno"
+
+	"github.com/samuel/go-zookeeper/zk"
 )
 
 // zookeeper connect poll

@@ -1,0 +1,14 @@
+run_mode: debug                         # Development mode, debug, release, test
+addr: :8080                             # HTTP bind port
+name: qbus-manager                      # the name of thr API Server
+url: http://127.0.0.1:8080              # The pingServer function requests the IP of the API server :port
+max_ping_count: 10                      # The number of times the pingServer function tries
+log:
+  writers: file,stdout                  # Output location: file, stdout, either one or both
+  logger_level: DEBUG                   # log level: DEBUG, INFO, WARN, ERROR, FATAL
+  logger_file: log/qbus-manager.log     # log file
+  log_format_text: true                 # The output format of the log, JSON or PlainText, is true in JSON format and false in non-JSON format
+  rollingPolicy: size                   # The options are: `daily`, `size`. If `daily` is selected, it will be saved according to the day; if `size` is selected, it will be saved according to the size
+  log_rotate_date: 1                    # rotate save time (days), used with `rollingPolicy: daily`
+  log_rotate_size: 10                   # rotate save size (MB), used with `rollingPolicy: size`
+  log_backup_count: 7                   # When the log file reaches the dump standard, the log system will compress the log file for backup. The maximum number of backup files is specified here.

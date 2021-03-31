@@ -2,9 +2,10 @@ package kafka
 
 import (
 	"context"
+	"time"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/lexkong/log"
-	"time"
 )
 
 const timeOut = 15 * time.Second
