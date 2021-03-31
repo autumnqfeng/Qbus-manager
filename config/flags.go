@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	cfg     = pflag.StringP("ConfigData", "c", "", "Qbus-manager ConfigData file path")
+	cfg     = pflag.StringP("ConfigData", "c", "", "qbus-manager ConfigData file path")
 	version = pflag.BoolP("version", "v", false, "show version info.")
 	zk      = pflag.StringP("zookeeper", "z", "10.209.203.12:2181", "The connection string for the zookeeper connection in the form host:port. Multiple hosts can be given to allow fail-over.")
 )
