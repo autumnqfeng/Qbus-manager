@@ -1,4 +1,4 @@
-module Qbus-manager
+module qbus-manager
 
 go 1.16
 

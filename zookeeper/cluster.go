@@ -1,9 +1,9 @@
 package zookeeper
 
 import (
-	"Qbus-manager/pkg/errno"
 	"fmt"
 	"github.com/lexkong/log"
+	"qbus-manager/pkg/errno"
 	"strings"
 	"sync"
 )

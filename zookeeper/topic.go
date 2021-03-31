@@ -1,8 +1,8 @@
 package zookeeper
 
 import (
-	"Qbus-manager/pkg/errno"
 	"github.com/lexkong/log"
+	"qbus-manager/pkg/errno"
 )
 
 func GetTopicByCluster(cc *ClusterConfig) ([]string, error) {

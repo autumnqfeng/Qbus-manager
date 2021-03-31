@@ -1,10 +1,10 @@
 package zookeeper
 
 import (
-	"Qbus-manager/pkg/errno"
 	"fmt"
 	"github.com/lexkong/log"
 	"github.com/samuel/go-zookeeper/zk"
+	"qbus-manager/pkg/errno"
 	"strconv"
 )
 

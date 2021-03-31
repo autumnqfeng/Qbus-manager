@@ -1,9 +1,9 @@
 package zookeeper
 
 import (
-	"Qbus-manager/pkg/errno"
 	"errors"
 	"github.com/samuel/go-zookeeper/zk"
+	"qbus-manager/pkg/errno"
 	"strings"
 	"time"
 )

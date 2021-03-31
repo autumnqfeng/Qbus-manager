@@ -1,11 +1,11 @@
 package cluster
 
 import (
-	"Qbus-manager/handler"
-	"Qbus-manager/pkg/errno"
-	"Qbus-manager/zookeeper"
 	"github.com/gin-gonic/gin"
 	"github.com/lexkong/log"
+	"qbus-manager/handler"
+	"qbus-manager/pkg/errno"
+	"qbus-manager/zookeeper"
 )
 
 func AddCluster(c *gin.Context) {

@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"time"
 
-	"Qbus-manager/handler"
-	"Qbus-manager/pkg/errno"
+	"qbus-manager/handler"
+	"qbus-manager/pkg/errno"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lexkong/log"

@@ -1,15 +1,15 @@
 package main
 
 import (
-	"Qbus-manager/zookeeper"
 	"net/http"
 	"os"
 	"os/signal"
 
-	"Qbus-manager/config"
-	"Qbus-manager/pkg/ping"
-	"Qbus-manager/pkg/version"
 	"github.com/lexkong/log"
+	"qbus-manager/config"
+	"qbus-manager/pkg/ping"
+	"qbus-manager/pkg/version"
+	"qbus-manager/zookeeper"
 )
 
 func main() {

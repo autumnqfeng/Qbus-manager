@@ -1,9 +1,9 @@
 package topic
 
 import (
-	"Qbus-manager/handler"
-	"Qbus-manager/kafka"
-	"Qbus-manager/pkg/errno"
+	"qbus-manager/handler"
+	"qbus-manager/kafka"
+	"qbus-manager/pkg/errno"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

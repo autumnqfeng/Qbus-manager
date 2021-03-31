@@ -1,12 +1,11 @@
 package router
 
 import (
-	"Qbus-manager/handler/check"
-	"Qbus-manager/handler/cluster"
-	"Qbus-manager/handler/topic"
 	"net/http"
-
-	"Qbus-manager/router/middleware"
+	"qbus-manager/handler/check"
+	"qbus-manager/handler/cluster"
+	"qbus-manager/handler/topic"
+	"qbus-manager/router/middleware"
 
 	// "github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"

@@ -1,10 +1,10 @@
 package ping
 
 import (
-	"Qbus-manager/config"
 	"errors"
 	"github.com/lexkong/log"
 	"net/http"
+	"qbus-manager/config"
 	"time"
 )
 

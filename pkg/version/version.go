@@ -1,10 +1,10 @@
 package version
 
 import (
-	"Qbus-manager/config"
 	"encoding/json"
 	"fmt"
 	"os"
+	"qbus-manager/config"
 	"runtime"
 )
 

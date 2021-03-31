@@ -1,9 +1,9 @@
 package config
 
 import (
-	"Qbus-manager/router"
-	"Qbus-manager/router/middleware"
 	"github.com/gin-gonic/gin"
+	"qbus-manager/router"
+	"qbus-manager/router/middleware"
 )
 
 func initGin() *gin.Engine {
