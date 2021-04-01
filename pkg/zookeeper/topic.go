@@ -2,8 +2,10 @@ package zookeeper
 
 import (
 	"fmt"
-	"go.uber.org/zap"
+
 	"qbus-manager/pkg/errno"
+
+	"go.uber.org/zap"
 )
 
 func GetTopicByCluster(cc *ClusterConfig) ([]string, error) {

@@ -2,10 +2,12 @@ package zookeeper
 
 import (
 	"fmt"
+	"strconv"
+
+	"qbus-manager/pkg/errno"
+
 	"github.com/samuel/go-zookeeper/zk"
 	"go.uber.org/zap"
-	"qbus-manager/pkg/errno"
-	"strconv"
 )
 
 type BrokerMsg struct {

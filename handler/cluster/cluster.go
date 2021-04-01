@@ -1,12 +1,12 @@
 package cluster
 
 import (
-	"go.uber.org/zap"
 	"qbus-manager/handler"
 	"qbus-manager/pkg/errno"
 	"qbus-manager/pkg/zookeeper"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func AddCluster(c *gin.Context) {

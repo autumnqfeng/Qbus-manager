@@ -2,7 +2,6 @@ package check
 
 import (
 	"fmt"
-	"go.uber.org/zap"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +9,7 @@ import (
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
+	"go.uber.org/zap"
 )
 
 const (

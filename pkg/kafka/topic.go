@@ -3,10 +3,10 @@ package kafka
 import (
 	"context"
 	"fmt"
-	"go.uber.org/zap"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"go.uber.org/zap"
 )
 
 const timeOut = 15 * time.Second

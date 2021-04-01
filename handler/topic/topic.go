@@ -1,7 +1,6 @@
 package topic
 
 import (
-	"go.uber.org/zap"
 	"strconv"
 
 	"qbus-manager/handler"
@@ -9,6 +8,7 @@ import (
 	"qbus-manager/pkg/kafka"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func Create(c *gin.Context) {
