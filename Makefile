@@ -11,7 +11,6 @@ gitTreeState = $(shell if git status|grep -q 'clean';then echo clean; else echo 
 ldflags="-w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${buildDate} -X ${versionDir}.gitCommit=${gitCommit} -X ${versionDir}.gitTreeState=${gitTreeState}"
 
 BINARY="qbus-manager"
-GOFILES=`find . -name "*.go" -type f -not -path "./vendor/*"`
 
 all: gotool
 	@go build -v -ldflags ${ldflags} .
