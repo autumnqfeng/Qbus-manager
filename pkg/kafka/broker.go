@@ -2,12 +2,10 @@ package kafka
 
 import (
 	"fmt"
-	. "strconv"
 
 	"qbus-manager/pkg/zookeeper"
 
-	"github.com/lexkong/log"
-	"github.com/lexkong/log/lager"
+	"go.uber.org/zap"
 )
 
 func init() {
@@ -21,7 +19,7 @@ func handleBrokerChanges() {
 	for hostPorts := range brokerChanges {
 		hashMap := make(map[int]zookeeper.HostPort)
 		for _, hostPort := range hostPorts {
-			log.Info("broker_change", lager.Data{Itoa(hostPort.Id): hostPort})
+			zap.L().Info("broker_change", zap.Int("brokerId", hostPort.Id), zap.Any("broker", hostPort))
 			hashMap[hostPort.Id] = hostPort
 		}
 		Brokers = hashMap

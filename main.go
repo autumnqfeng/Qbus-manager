@@ -6,11 +6,12 @@ import (
 	"os/signal"
 
 	"qbus-manager/_init"
+	"qbus-manager/configs"
 	"qbus-manager/pkg/ping"
 	"qbus-manager/pkg/version"
 	"qbus-manager/pkg/zookeeper"
 
-	"github.com/lexkong/log"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -23,23 +24,17 @@ func main() {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt)
 
-	// SystemInit
-	g, err := _init.SystemInit()
+	// Init
+	g, err := _init.Init()
 	if err != nil {
 		panic(err)
-	}
-
-	if err := zookeeper.Init(_init.ZookeeperURL); err != nil {
-		log.Errorf(err, "zk_connect")
-		os.Exit(1)
-		return
 	}
 
 	// Ping the server to make sure the router is working.
 	go ping.Start()
 
-	log.Infof("Start to listening the incoming requests on http address: %s", _init.DataYaml.Addr)
-	log.Info(http.ListenAndServe(_init.DataYaml.Addr, g).Error())
+	zap.L().Info("Start to listening the incoming requests on http address.", zap.String("port", configs.Conf.Port))
+	zap.L().Info(http.ListenAndServe(configs.Conf.Port, g).Error())
 
 	<-signals
 	zookeeper.StopAll()

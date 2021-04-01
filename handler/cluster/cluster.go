@@ -1,16 +1,16 @@
 package cluster
 
 import (
+	"go.uber.org/zap"
 	"qbus-manager/handler"
 	"qbus-manager/pkg/errno"
 	"qbus-manager/pkg/zookeeper"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lexkong/log"
 )
 
 func AddCluster(c *gin.Context) {
-	log.Info("Add cluster function called.")
+	zap.L().Info("Add cluster function called.")
 	var acv AddClusterVo
 	if err := c.Bind(&acv); err != nil {
 		handler.SendResponse(c, errno.ErrBind, nil)

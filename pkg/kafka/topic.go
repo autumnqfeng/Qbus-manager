@@ -2,10 +2,11 @@ package kafka
 
 import (
 	"context"
+	"fmt"
+	"go.uber.org/zap"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/lexkong/log"
 )
 
 const timeOut = 15 * time.Second
@@ -13,7 +14,7 @@ const timeOut = 15 * time.Second
 func CreateTopic(name string, partitions, replicationFactor int, topicConfig map[string]string) error {
 	a, err := adminClient()
 	if err != nil {
-		log.Errorf(err, "create_topic")
+		zap.L().Error(fmt.Sprintf("create_topic"), zap.Error(err))
 		return err
 	}
 
@@ -31,12 +32,12 @@ func CreateTopic(name string, partitions, replicationFactor int, topicConfig map
 		kafka.SetAdminOperationTimeout(timeOut))
 
 	if err != nil {
-		log.Errorf(err, "create_topic")
+		zap.L().Error(fmt.Sprintf("create_topic"), zap.Error(err))
 		return err
 	}
 	for _, result := range results {
 		if result.Error.Code() != kafka.ErrNoError {
-			log.Errorf(result.Error, "create_topic")
+			zap.L().Error(fmt.Sprintf("create_topic"), zap.Error(result.Error))
 			return result.Error
 		}
 	}
@@ -47,7 +48,7 @@ func CreateTopic(name string, partitions, replicationFactor int, topicConfig map
 func DeleteTopic(name string) error {
 	a, err := adminClient()
 	if err != nil {
-		log.Errorf(err, "delete_topic")
+		zap.L().Error(fmt.Sprintf("delete_topic"), zap.Error(err))
 		return err
 	}
 
@@ -60,12 +61,12 @@ func DeleteTopic(name string) error {
 		kafka.SetAdminOperationTimeout(timeOut))
 
 	if err != nil {
-		log.Errorf(err, "delete_topic")
+		zap.L().Error(fmt.Sprintf("delete_topic"), zap.Error(err))
 		return err
 	}
 	for _, result := range results {
 		if result.Error.Code() != kafka.ErrNoError {
-			log.Errorf(result.Error, "delete_topic")
+			zap.L().Error(fmt.Sprintf("delete_topic"), zap.Error(result.Error))
 			return result.Error
 		}
 	}

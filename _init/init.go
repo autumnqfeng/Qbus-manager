@@ -1,51 +1,45 @@
 package _init
 
 import (
+	"fmt"
+	"go.uber.org/zap"
+	"qbus-manager/configs"
+	"qbus-manager/pkg/logger"
+	"qbus-manager/pkg/zookeeper"
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
-	"github.com/lexkong/log"
 	"github.com/spf13/viper"
 )
 
-type Config struct {
-	RunMode      string `yaml:"run_mode"`
-	Addr         string `yaml:"addr"`
-	Name         string `yaml:"name"`
-	Url          string `yaml:"url"`
-	MaxPingCount int    `yaml:"max_ping_count"`
-}
-
-var DataYaml *Config
-
-func parseConfig() *Config {
-	cfg := Config{
-		RunMode:      viper.GetString("run_mode"),
-		Addr:         viper.GetString("addr"),
-		Name:         viper.GetString("name"),
-		Url:          viper.GetString("url"),
-		MaxPingCount: viper.GetInt("max_ping_count"),
-	}
-	return &cfg
-}
-
-func SystemInit() (*gin.Engine, error) {
+func Init() (*gin.Engine, error) {
 
 	// _init ConfigData properties
-	if err := configInit(); err != nil {
+	if err := viperInit(); err != nil {
 		return nil, err
 	}
 
 	// _init log package
-	logInit()
+	//logInit()
+
+	if err := logger.InitLogger(configs.Conf.LogConfig); err != nil {
+		fmt.Printf("init logger failed, err:%v\n", err)
+		return nil, err
+	}
+
 	// monitor configuration file changes and hot load the program
 	watchConfig()
+
+	if err := zookeeper.Init(ZookeeperURL); err != nil {
+		zap.L().Error("zk_connect filed", zap.Error(err))
+		return nil, err
+	}
 
 	return ginInit(), nil
 }
 
-func configInit() error {
+func viperInit() error {
 	if Cfg != "" {
 		viper.SetConfigFile(Cfg)
 	} else {
@@ -60,7 +54,7 @@ func configInit() error {
 		return err
 	}
 
-	DataYaml = parseConfig()
+	configs.Conf = configs.ParseConfig()
 
 	return nil
 }
@@ -68,6 +62,6 @@ func configInit() error {
 func watchConfig() {
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		log.Infof("Config file changed：%s", e.Name)
+		zap.L().Info("Config file changed", zap.String("event_name", e.Name))
 	})
 }

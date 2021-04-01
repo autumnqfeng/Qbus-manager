@@ -1,6 +1,7 @@
 package topic
 
 import (
+	"go.uber.org/zap"
 	"strconv"
 
 	"qbus-manager/handler"
@@ -8,11 +9,10 @@ import (
 	"qbus-manager/pkg/kafka"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lexkong/log"
 )
 
 func Create(c *gin.Context) {
-	log.Info("Topic Create function called.")
+	zap.L().Info("Topic Create function called.")
 	var t CreateTopicVo
 	if err := c.Bind(&t); err != nil {
 		handler.SendResponse(c, errno.ErrBind, nil)

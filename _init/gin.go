@@ -2,14 +2,15 @@ package _init
 
 import (
 	"github.com/gin-gonic/gin"
+	"qbus-manager/configs"
+	"qbus-manager/pkg/logger"
 	"qbus-manager/router"
-	"qbus-manager/router/middleware"
 )
 
 func ginInit() *gin.Engine {
 
 	// Set gin mode.
-	gin.SetMode(DataYaml.RunMode)
+	gin.SetMode(configs.Conf.Mode)
 
 	// Create the Gin engine.
 	g := gin.New()
@@ -20,7 +21,8 @@ func ginInit() *gin.Engine {
 		g,
 
 		// Middleware's.
-		middleware.Logging(),
+		logger.GinLogger(),
+		logger.GinRecovery(true),
 	)
 	return g
 }

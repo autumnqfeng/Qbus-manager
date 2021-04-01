@@ -2,6 +2,7 @@ package check
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,11 +20,13 @@ const (
 )
 
 func HealthCheck(c *gin.Context) {
+	zap.L().Debug("HealthCheck function called.")
 	message := "OK"
 	c.String(http.StatusOK, "\n"+message)
 }
 
 func DiskCheck(c *gin.Context) {
+	zap.L().Debug("DiskCheck function called.")
 	u, _ := disk.Usage("/")
 
 	usedMB := int(u.Used) / MB
@@ -48,6 +51,7 @@ func DiskCheck(c *gin.Context) {
 }
 
 func CPUCheck(c *gin.Context) {
+	zap.L().Debug("CPUCheck function called.")
 	cores, _ := cpu.Counts(false)
 
 	a, _ := load.Avg()
@@ -71,6 +75,7 @@ func CPUCheck(c *gin.Context) {
 }
 
 func RAMCheck(c *gin.Context) {
+	zap.L().Debug("RAMCheck function called.")
 	u, _ := mem.VirtualMemory()
 
 	usedMB := int(u.Used) / MB

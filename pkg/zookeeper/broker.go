@@ -2,8 +2,8 @@ package zookeeper
 
 import (
 	"fmt"
-	"github.com/lexkong/log"
 	"github.com/samuel/go-zookeeper/zk"
+	"go.uber.org/zap"
 	"qbus-manager/pkg/errno"
 	"strconv"
 )
@@ -40,7 +40,7 @@ func WatchBrokers(ch chan []HostPort) {
 func watchBrokers() {
 	conn, err := GetDefaultConn()
 	if err != nil {
-		log.Errorf(errno.ErrGetConn, "err_code: `%v`, watch brokers `%v`", errno.ErrGetConn.Code, errno.ErrGetConn.Message)
+		zap.L().Error(fmt.Sprintf("err_code: `%v`, watch brokers `%v`", errno.ErrGetConn.Code, errno.ErrGetConn.Message), zap.Error(errno.ErrGetConn))
 		return
 	}
 	data, _, events, _ := watchChildren(conn, "/brokers/ids")
@@ -77,13 +77,13 @@ func GetBrokerListByCluster(cc *ClusterConfig) ([]HostPort, error) {
 
 	conn, err := GetConn(clusterName)
 	if err != nil {
-		log.Errorf(errno.ErrClusterConnect, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrClusterConnect.Code, errno.ErrClusterConnect.Message, clusterName)
+		zap.L().Error(fmt.Sprintf("err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrClusterConnect.Code, errno.ErrClusterConnect.Message, clusterName), zap.Error(errno.ErrClusterConnect))
 		return nil, errno.ErrClusterConnect
 	}
 
 	data, err := children(conn, "/brokers/ids")
 	if err != nil {
-		log.Errorf(errno.ErrGetBroker, "err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrGetBroker.Code, errno.ErrGetBroker.Message, clusterName)
+		zap.L().Error(fmt.Sprintf("err_code: `%v`, err_msg: `%v`, clusterName: `%v`", errno.ErrGetBroker.Code, errno.ErrGetBroker.Message, clusterName), zap.Error(errno.ErrGetBroker))
 		return nil, errno.ErrGetBroker
 	}
 
