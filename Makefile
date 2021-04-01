@@ -14,7 +14,7 @@ BINARY="qbus-manager"
 GOFILES=`find . -name "*.go" -type f -not -path "./vendor/*"`
 
 all: gotool
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -ldflags ${ldflags} .
+	@go build -v -ldflags ${ldflags} .
 clean:
 	@if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
 gotool:
